@@ -17,7 +17,7 @@ class Lemonwaymkt extends Module{
 	{
 		$this->name = 'lemonwaymkt';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.0.0';
+		$this->version = '1.0.1';
 		$this->author = 'SIRATECK';
 		$this->need_instance = 0;
 		$this->dependencies = array('lemonway','marketplace');
@@ -201,7 +201,7 @@ class Lemonwaymkt extends Module{
 				)
 		);
 		
-		$container['form']['input'][] = array(
+		/*$container['form']['input'][] = array(
 				'type' => 'switch',
 				'label' => $this->l('Auto money dispatch'),
 				'name' => 'LEMONWAYMKT_AUTO_DISPATCH',
@@ -221,7 +221,7 @@ class Lemonwaymkt extends Module{
 				)
 		);
 		 
-		/*$container['form']['input'][] = array(
+		$container['form']['input'][] = array(
 				'col' => 3,
 				'label' => $this->l('Comission amount'),
 				'name' => 'LEMONWAY_COMMISSION_AMOUNT',
@@ -575,7 +575,11 @@ class Lemonwaymkt extends Module{
         			
         			
         	}//end foreach $seller_cart_products
-
+			
+        	
+        	$total_admin_commission = 0;
+        	$kit = new LemonWayKit();
+        	
         	foreach ($transactions as $customer_id=>$w_transac){
         			
         		//Save with default status "to pay" before call LW service
@@ -591,42 +595,43 @@ class Lemonwaymkt extends Module{
         			//Check conf auto dispatch and Check status order and if it's valid order we do send payment
         			if(Configuration::get('LEMONWAYMKT_AUTO_DISPATCH')) {
         						
-        			$params = array(
-        					"debitWallet"	=> $w_transac->debit_wallet,
-        					"creditWallet"	=> $w_transac->credit_wallet,
-        					"amount"		=> number_format((float)$w_transac->amount_to_pay, 2, '.', ''),
-        					"message"		=> sprintf($this->l('Send payment for order %s'),$id_order),
-        					//"scheduledDate" => "",
-        					//"privateData"	=> "",
-        			);
-        				
-        			$kit = new LemonWayKit();
-        				
-        			try {
-	        				$res = $kit->SendPayment($params);
+	        			
+	        			
+	        			$params = array(
+	        					"debitWallet"	=> $w_transac->debit_wallet,
+	        					"creditWallet"	=> $w_transac->credit_wallet,
+	        					"amount"		=> number_format((float)$w_transac->amount_to_pay, 2, '.', ''),
+	        					"message"		=> sprintf($this->l('Send payment for order %s'),$id_order)
+	        			);
+	        				
+	        				
+	        			try {
+		        				$res = $kit->SendPayment($params);
+		        	
+		        				if(isset($res->lwError))
+		        				{
+		        					$msg = sprintf(Tools::displayError("Error: %s. Code: %s"),$res->lwError->MSG, $res->lwError->CODE);
+		        					Logger::AddLog($msg,4);
+		        				}
+		        	
+		        				if(count($res->operations) && ($op = current($res->operations)))
+		        				{
+			        				$w_transac->status = WalletTransaction::STATUS_PAID;
+			        				$w_transac->lw_commission = $op->COM;
+			        					
+			        				$w_transac->save();
+		        				}
 	        	
-	        				if(isset($res->lwError))
-	        				{
-	        					$msg = sprintf(Tools::displayError("Error: %s. Code: %s"),$res->lwError->MSG, $res->lwError->CODE);
-	        					Logger::AddLog($msg,4);
-	        				}
+	        				} catch (Exception $e) {
 	        	
-	        				if(count($res->operations) && ($op = current($res->operations)))
-	        				{
-		        				$w_transac->status = WalletTransaction::STATUS_PAID;
-		        				$w_transac->lw_commission = $op->COM;
-		        					
-		        				$w_transac->save();
+	        					Logger::AddLog($e->getMessage(),4);
+	        	
 	        				}
-        	
-        				} catch (Exception $e) {
-        	
-        					Logger::AddLog($e->getMessage(),4);
-        	
-        				}
         					
         			}
-        				//@TODO wallet SC
+        			
+        			$total_admin_commission += $w_transac->admin_commission;
+        			
         		}
         		elseif($w_transac->credit_wallet == 'none'){
         			Logger::AddLog(sprintf($this->l("Transaction not sended to Lemonway because shop: %s no has wallet !"),$w_transac->shop_name),1,null,null,true);
@@ -636,6 +641,34 @@ class Lemonwaymkt extends Module{
         		}
         	}//endforeach transactions
         	
+        	if($total_admin_commission > 0){
+        		
+	        	//Send commissions amount to wallet SC
+	        	$params = array(
+	        			"debitWallet"	=> $w_transac->debit_wallet,
+	        			"creditWallet"	=> "SC",
+	        			"amount"		=> number_format((float)$total_admin_commission, 2, '.', ''),
+	        			"message"		=> sprintf($this->l('Send commssions amount for order %s'),$id_order)
+	        	);
+	        	
+	        	
+	        	try {
+	        		$res = $kit->SendPayment($params);
+	        		 
+	        		if(isset($res->lwError))
+	        		{
+	        			$msg = sprintf(Tools::displayError("Error: %s. Code: %s"),$res->lwError->MSG, $res->lwError->CODE);
+	        			Logger::AddLog($msg,4);
+	        		}
+	        		 
+	        		//@TODO maybe send an email to marketplace
+	        	
+	        	} catch (Exception $e) {
+	        	
+	        		Logger::AddLog($e->getMessage(),4);
+	        	
+	        	}
+        	}
         	
         }
 	}
