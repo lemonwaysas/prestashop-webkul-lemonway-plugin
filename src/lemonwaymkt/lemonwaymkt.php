@@ -17,7 +17,7 @@ class Lemonwaymkt extends Module{
 	{
 		$this->name = 'lemonwaymkt';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.0.1';
+		$this->version = '1.0.2';
 		$this->author = 'SIRATECK';
 		$this->need_instance = 0;
 		$this->dependencies = array('lemonway','marketplace');
@@ -55,10 +55,10 @@ class Lemonwaymkt extends Module{
 		}
 	
 		//Mkt CONFIGURATION
-		Configuration::updateValue('LEMONWAYMKT_WALLET_AUTO_CREATE', true);
-		Configuration::updateValue('LEMONWAYMKT_AUTO_DISPATCH', true);
-		Configuration::updateValue('LEMONWAY_COMMISSION_AMOUNT', 0);
-		Configuration::updateValue('LEMONWAY_IS_AUTO_COMMISSION', true);
+		Configuration::updateValue('LEMONWAYMKT_WALLET_AUTO_CREATE', 1);
+		Configuration::updateValue('LEMONWAYMKT_AUTO_DISPATCH', 1);
+		Configuration::updateValue('LEMONWAY_COMMISSION_AMOUNT', 0.00);
+		Configuration::updateValue('LEMONWAY_IS_AUTO_COMMISSION', 1);
 		
 		include(dirname(__FILE__).'/sql/install.php');
 		
@@ -260,6 +260,9 @@ class Lemonwaymkt extends Module{
 		$form_values = $this->getConfigFormValues();
 	
 		foreach (array_keys($form_values) as $key) {
+			if($key == 'LEMONWAYMKT_AUTO_DISPATCH'){
+				continue;
+			}
 			Configuration::updateValue($key, Tools::getValue($key));
 		}
 	}
