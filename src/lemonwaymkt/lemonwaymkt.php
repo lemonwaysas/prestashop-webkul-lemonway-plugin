@@ -17,7 +17,7 @@ class Lemonwaymkt extends Module{
 	{
 		$this->name = 'lemonwaymkt';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.0.0';
+		$this->version = '1.0.1';
 		$this->author = 'SIRATECK';
 		$this->need_instance = 0;
 		$this->dependencies = array('lemonway','marketplace');
