@@ -647,7 +647,7 @@ class Lemonwaymkt extends Module{
 	        	$params = array(
 	        			"debitWallet"	=> $w_transac->debit_wallet,
 	        			"creditWallet"	=> "SC",
-	        			"amount"		=> number_format((float)$admin_commission, 2, '.', ''),
+	        			"amount"		=> number_format((float)$total_admin_commission, 2, '.', ''),
 	        			"message"		=> sprintf($this->l('Send commssions amount for order %s'),$id_order)
 	        	);
 	        	
