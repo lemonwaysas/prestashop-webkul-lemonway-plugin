@@ -55,10 +55,10 @@ class Lemonwaymkt extends Module{
 		}
 	
 		//Mkt CONFIGURATION
-		Configuration::updateValue('LEMONWAYMKT_WALLET_AUTO_CREATE', true);
-		Configuration::updateValue('LEMONWAYMKT_AUTO_DISPATCH', true);
-		Configuration::updateValue('LEMONWAY_COMMISSION_AMOUNT', 0);
-		Configuration::updateValue('LEMONWAY_IS_AUTO_COMMISSION', true);
+		Configuration::updateValue('LEMONWAYMKT_WALLET_AUTO_CREATE', 1);
+		Configuration::updateValue('LEMONWAYMKT_AUTO_DISPATCH', 1);
+		Configuration::updateValue('LEMONWAY_COMMISSION_AMOUNT', 0.00);
+		Configuration::updateValue('LEMONWAY_IS_AUTO_COMMISSION', 1);
 		
 		include(dirname(__FILE__).'/sql/install.php');
 		
