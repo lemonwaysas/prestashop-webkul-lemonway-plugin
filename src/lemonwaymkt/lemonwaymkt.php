@@ -17,7 +17,7 @@ class Lemonwaymkt extends Module{
 	{
 		$this->name = 'lemonwaymkt';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.0.2';
+		$this->version = '1.0.3';
 		$this->author = 'SIRATECK';
 		$this->need_instance = 0;
 		$this->dependencies = array('lemonway','marketplace');
@@ -478,6 +478,7 @@ class Lemonwaymkt extends Module{
 	
 	public function hookActionValidateOrder($params)
 	{
+		/* @var $order OrderCore  */ 
 		$order = $params['order'];
 		$id_order = $order->id;
 		$order_status = $params['orderStatus'];
@@ -580,7 +581,8 @@ class Lemonwaymkt extends Module{
         	}//end foreach $seller_cart_products
 			
         	
-        	$total_admin_commission = 0;
+        	//$total_admin_commission = 0;
+        	$total_seller_amt = 0;
         	$kit = new LemonWayKit();
         	
         	foreach ($transactions as $customer_id=>$w_transac){
@@ -633,7 +635,8 @@ class Lemonwaymkt extends Module{
         					
         			}
         			
-        			$total_admin_commission += $w_transac->admin_commission;
+        			//$total_admin_commission += $w_transac->admin_commission;
+        			$total_seller_amt += $w_transac->amount_to_pay;
         			
         		}
         		elseif($w_transac->credit_wallet == 'none'){
@@ -644,14 +647,17 @@ class Lemonwaymkt extends Module{
         		}
         	}//endforeach transactions
         	
-        	if($total_admin_commission > 0){
+        	//rest of amount order
+        	$rest_order_amount = $order->total_paid - $total_seller_amt;
+        	
+        	if($rest_order_amount > 0){
         		
 	        	//Send commissions amount to wallet SC
 	        	$params = array(
 	        			"debitWallet"	=> $w_transac->debit_wallet,
 	        			"creditWallet"	=> "SC",
-	        			"amount"		=> number_format((float)$total_admin_commission, 2, '.', ''),
-	        			"message"		=> sprintf($this->l('Send commssions amount for order %s'),$id_order)
+	        			"amount"		=> number_format((float)$rest_order_amount, 2, '.', ''),
+	        			"message"		=> sprintf($this->l('Send the rest of the order %s (commssions,shipping, your products ...)'),$id_order)
 	        	);
 	        	
 	        	
