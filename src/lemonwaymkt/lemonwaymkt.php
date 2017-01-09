@@ -579,7 +579,7 @@ class Lemonwaymkt extends Module{
                                 "debitWallet"   => $w_transac->debit_wallet,
                                 "creditWallet"  => $w_transac->credit_wallet,
                                 "amount"        => number_format((float)$w_transac->amount_to_pay, 2, '.', ''),
-                                "message"       => sprintf($this->l('Send payment for order %s'),$id_order)
+                                "message"       => Configuration::get('PS_SHOP_NAME') . " - " . sprintf($this->l('Send payment for order %s'), $id_order)
                         );
                             
                             
