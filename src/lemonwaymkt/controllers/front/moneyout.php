@@ -140,10 +140,10 @@ class LemonwaymktMoneyoutModuleFrontController extends ModuleFrontController
 						"wallet" => $this->moneyout->id_lw_wallet,
 						"amountTot" => $this->moneyout->amount_to_pay,
 						'amountCom' => number_format((float)Configuration::get('LEMONWAY_COMMISSION_AMOUNT'), 2, '.', ''),
-						"message" => urlencode(Configuration::get('PS_SHOP_NAME')) . " - " . sprintf($this->module->l("Moneyout of %s %s initiated by %s"),
+						"message" => Configuration::get('PS_SHOP_NAME') . " - " . sprintf($this->module->l("Moneyout of %s %s initiated by %s"),
                                                                                                         $this->moneyout->amount_to_pay,
 																										$this->context->currency->sign,
-																										urlencode($shop_name)
+																										$shop_name
 						),
 						"ibanId" => $this->moneyout->id_lw_iban,
 						"autCommission" => Configuration::get('LEMONWAY_IS_AUTO_COMMISSION'),

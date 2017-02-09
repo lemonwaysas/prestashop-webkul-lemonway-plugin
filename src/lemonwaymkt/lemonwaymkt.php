@@ -17,7 +17,7 @@ class Lemonwaymkt extends Module{
 	{
 		$this->name = 'lemonwaymkt';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.1.1';
+		$this->version = '1.1.2';
 		$this->author = 'SIRATECK';
 		$this->need_instance = 0;
 		$this->dependencies = array('lemonway','marketplace');
@@ -32,7 +32,7 @@ class Lemonwaymkt extends Module{
 		parent::__construct();
 	
 		$this->displayName = $this->l('Lemonway Marketplace');
-		$this->description = $this->l('It\' adaptive Lemonway payment for marketplace module from Webkul');
+		$this->description = $this->l('It\'s adaptive Lemonway payment for marketplace module from Webkul');
 	
 		$this->confirmUninstall = $this->l('Are you sure you want to uninstall my module? You will be loose your datas !');
 
@@ -579,7 +579,7 @@ class Lemonwaymkt extends Module{
 	        					"debitWallet"	=> $w_transac->debit_wallet,
 	        					"creditWallet"	=> $w_transac->credit_wallet,
 	        					"amount"		=> number_format((float)$w_transac->amount_to_pay, 2, '.', ''),
-	        					"message"		=> urlencode(Configuration::get('PS_SHOP_NAME')) . " - " . sprintf($this->l('Send payment for order %s'), $id_order)
+	        					"message"		=> Configuration::get('PS_SHOP_NAME') . " - " . sprintf($this->l('Send payment for order %s'), $id_order)
 	        			);
 	        				
 	        				

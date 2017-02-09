@@ -1,10 +1,10 @@
 <?php
+require_once _PS_MODULE_DIR_ . 'marketplace/classes/MarketplaceCustomer.php';
+require_once _PS_MODULE_DIR_ . 'lemonway/classes/Wallet.php';
+require_once _PS_MODULE_DIR_ . 'lemonway/classes/Iban.php';
+require_once _PS_MODULE_DIR_ . 'lemonway/classes/MoneyOut.php';
+require_once _PS_MODULE_DIR_ . 'lemonway/lemonway.php';
 
-require_once _PS_MODULE_DIR_.'marketplace/classes/MarketplaceCustomer.php';
-require_once _PS_MODULE_DIR_.'lemonway/classes/Wallet.php';
-require_once _PS_MODULE_DIR_.'lemonway/classes/Iban.php';
-require_once _PS_MODULE_DIR_.'lemonway/classes/MoneyOut.php';
-require_once _PS_MODULE_DIR_.'lemonway/lemonway.php';
 class LemonwaymktWalletModuleFrontController extends ModuleFrontController
 {
 	public $auth = true;
@@ -23,49 +23,33 @@ class LemonwaymktWalletModuleFrontController extends ModuleFrontController
 		$has_wallet = false;
 		
 		$wallet = new WalletCore();
-		if($walletExist = $wallet->getByCustomerId($this->context->customer->id))
-		{
+		if ($walletExist = $wallet->getByCustomerId($this->context->customer->id)) {
 			$wallet = $walletExist;
 			$this->context->smarty->assign('wallet',$wallet);
 			$has_wallet = true;
 		}
 		
-		
-		if(Tools::isSubmit('createWalletSubmit') && !$has_wallet){
+		if (Tools::isSubmit('createWalletSubmit') && !$has_wallet) {
 			
 			$customer = $this->context->customer;
 			$mkt_customer_obj = new MarketplaceCustomer();
 			$mkt_customer = $mkt_customer_obj->findMarketPlaceCustomer($customer->id);
-			if(!$mkt_customer ||( is_array($mkt_customer) && !$mkt_customer['is_seller']))
-			{
+			if (!$mkt_customer ||( is_array($mkt_customer) && !$mkt_customer['is_seller'])) {
 				$this->errors[] = $this->module->l('You are not a vendor or your account is not active!');
-			}
-			else
-			{
-				try {
-						
+			} else {
+				try {	
 					$wallet = $this->module->registerWallet($customer,$mkt_customer['marketplace_seller_id']);
-					if($wallet)
-					{
+					if ($wallet) {
 						$this->context->smarty->assign('wallet',$wallet);
 						$has_wallet = true;
 					}
-					
-					
 				} catch (Exception $e) {
-					
 					$this->errors[] = $e->getMessage();
-					
 				}
-
 			}
-			
-		}
-		elseif (Tools::isSubmit('uploadDocSubmit') && $has_wallet){
-			
+		} elseif (Tools::isSubmit('uploadDocSubmit') && $has_wallet) {
 			$file = Tools::fileAttachment();
-			if(!$file)
-			{
+			if(!$file) {
 				$m = $this->module;
 				$uploadErrors = array(
 						0 => $m->l('There is no error, the file uploaded with success'),
@@ -79,17 +63,10 @@ class LemonwaymktWalletModuleFrontController extends ModuleFrontController
 				);
 				$errorId = (int)$_FILES['fileUpload']['error'];
 				$this->errors[] = $uploadErrors[$errorId];
-			}
-			else{
-				
-				if(!Tools::isSubmit('file_type'))
-				{
+			} else {
+				if (!Tools::isSubmit('file_type')) {
 					$this->errors[] = $this->module->l('You must to choose a file type!');
-
-				}
-				else{
-					
-				
+				} else {
 					$params = array(
 							'wallet'=>$wallet->id_lw_wallet,
 							'fileName'=>$file['name'],

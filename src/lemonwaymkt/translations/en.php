@@ -3,7 +3,7 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{lemonwaymkt}prestashop>lemonwaymkt_4f14c0acb8298b5aaa86383d9903138f'] = 'Lemonway Marketplace';
-$_MODULE['<{lemonwaymkt}prestashop>lemonwaymkt_b2c91cdb21c3b5d450314b52aa569168'] = 'It\' adaptive Lemonway payment for marketplace module from Webkul';
+$_MODULE['<{lemonwaymkt}prestashop>lemonwaymkt_a6658ad62a4d1bd48bcc88456eab065b'] = 'It\'s adaptive Lemonway payment for marketplace module from Webkul';
 $_MODULE['<{lemonwaymkt}prestashop>lemonwaymkt_88d15f5a603d28b02127831b1dc1b1ff'] = 'Are you sure you want to uninstall my module? You will be loose your datas !';
 $_MODULE['<{lemonwaymkt}prestashop>lemonwaymkt_92d4773a9f32fc3333cb8238471cf763'] = 'You have to enable the cURL extension on your server to install this module';
 $_MODULE['<{lemonwaymkt}prestashop>lemonwaymkt_dd494653c5f48808325fca382527bc96'] = 'MARKETPLACE CONFIGURATION';

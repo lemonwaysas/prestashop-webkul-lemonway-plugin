@@ -3,7 +3,7 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{lemonwaymkt}prestashop>lemonwaymkt_4f14c0acb8298b5aaa86383d9903138f'] = 'Lemonway Marketplace';
-$_MODULE['<{lemonwaymkt}prestashop>lemonwaymkt_b2c91cdb21c3b5d450314b52aa569168'] = 'Ce module adapte le paiement inter-wallet pour le module Marketplace webkul';
+$_MODULE['<{lemonwaymkt}prestashop>lemonwaymkt_a6658ad62a4d1bd48bcc88456eab065b'] = 'Ce module adapte le paiement inter-wallet pour le module Marketplace Webkul';
 $_MODULE['<{lemonwaymkt}prestashop>lemonwaymkt_88d15f5a603d28b02127831b1dc1b1ff'] = 'Etes vous sûr de vouloir désinstaller le module.';
 $_MODULE['<{lemonwaymkt}prestashop>lemonwaymkt_92d4773a9f32fc3333cb8238471cf763'] = 'Vous devez activer l\'extension PHP cURL pour utiliser le module';
 $_MODULE['<{lemonwaymkt}prestashop>lemonwaymkt_dd494653c5f48808325fca382527bc96'] = 'Configuration Marketplace';
