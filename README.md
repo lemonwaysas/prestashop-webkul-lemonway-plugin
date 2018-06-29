@@ -1,5 +1,6 @@
-# Lemonway Presta Webkul
+# Lemonway Presta Webkul (Abandoned)
 ---
+# _This project has been abandoned._
 ## This module is compatible with Webkul Marketplace 2.0.2
 ## How to use this repository
 
